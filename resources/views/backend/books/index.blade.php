@@ -53,9 +53,10 @@
                                                 <td>{{ $book->category->name }}</td>
                                                 <td>{{ $book->details }}</td>
                                                 <td>
-                                                    <a href="{{ asset('storage/books/' . $book->download_link) }}" target="_blank">
+                                                    <a href="{{ asset('storage/books/'.$book->download_link) }}" target="_blank">
                                 <i class="fas fa-file-pdf"></i>
-                            </a></td>
+                            </a>
+                        </td>
                                                 <td>
                                                     <a class="btn btn-info"
                                                         href="{{ route('books.edit', $book->id) }}">Edit</a>

@@ -21,7 +21,7 @@ class BookController extends BaseController
             'name' => $request->name,
             'details' => $request->details,
             'category_id' => $request->category_id,
-            'download_link' => $request->download_link,
+            'download_link' => $this->uploadpdf(request()->file('download_link')),
         ];
 
         $book = Book::create($input);
@@ -42,13 +42,20 @@ class BookController extends BaseController
 
     public function update(Request $request, Book $book)
     {
-        $input = $request->all();
+        $input = [
+            'name' => $request->name,
+            'details' => $request->details,
+            'category_id' => $request->category_id,
+        ];
+        if ($request->hasFile('download_link')) {
+            $download_link = $request->file('download_link');
+            $name = time() . '.' . $download_link->getClientOriginalExtension();
+            $destinationPath = storage_path('/app/public/books/');
+            $download_link->move($destinationPath, $name);
+            $book->download_link = $name;
+        }
+        $book->update($input);
 
-        $book->name = $input['name'];
-        $book->details = $input['details'];
-        $book->category_id = $input['category_id'];
-        $book->download_link = $input['download_link'];
-        $book->save();
 
         return $this->sendResponse($book->toArray(), 'Book updated successfully.');
     }
@@ -58,5 +65,13 @@ class BookController extends BaseController
         $book->delete();
 
         return $this->sendResponse($book->toArray(), 'Book deleted successfully.');
+    }
+
+    public function uploadpdf($file)
+    {
+        $name = time() . '.' . $file->getClientOriginalExtension();
+        $destinationPath = storage_path('/app/public/books/');
+        $file->move($destinationPath, $name);
+        return $name;
     }
 }
