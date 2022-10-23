@@ -48,8 +48,8 @@ class BookController extends Controller
         // If include file, upload
         if($request->file()) {
             $fileName = time().'_'.$request->download_link->getClientOriginalName();
-            $filePath = $request->file('download_link')->storeAs('bookimg', $fileName, 'public');
-            $path = '/storage/'.$filePath;
+            $filePath = $request->file('download_link')->storeAs('books', $fileName, 'public');
+            $path = 'storage/'.$filePath;
         }
 
         // Data insert
@@ -109,8 +109,8 @@ class BookController extends Controller
         // If include file, upload
         if($request->file()) {
             $fileName = time().'_'.$request->download_link->getClientOriginalName();
-            $filePath = $request->file('download_link')->storeAs('bookimg', $fileName, 'public');
-            $path = '/storage/'.$filePath;
+            $filePath = $request->file('download_link')->storeAs('books', $fileName, 'public');
+            $path = 'storage/'.$filePath;
         }
 
         // Data insert
@@ -134,7 +134,6 @@ class BookController extends Controller
     public function destroy($id)
     {
         $book = Book::find($id);
-        $book->unlink($book->download_link);
         $book->delete();
 
         // Redirect
