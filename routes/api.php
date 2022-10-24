@@ -25,10 +25,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/auth/register', [AuthController::class, 'createUser']);
 Route::post('/auth/login', [AuthController::class, 'loginUser']);
-
-Route::apiResource('categories', CategoryController::class)->middleware('auth:sanctum');
+Route::apiResource('categories', CategoryController::class);
 Route::get('categories/search/{id}', function ($id) {
     return Book::where('category_id', $id)->get();
     
-})->middleware('auth:sanctum');
-Route::apiResource('books', BookController::class)->middleware('auth:sanctum');
+});
+Route::apiResource('books', BookController::class);
+
+// Route::apiResource('categories', CategoryController::class)->middleware('auth:sanctum');
+// Route::get('categories/search/{id}', function ($id) {
+//     return Book::where('category_id', $id)->get();
+    
+// })->middleware('auth:sanctum');
+// Route::apiResource('books', BookController::class)->middleware('auth:sanctum');
