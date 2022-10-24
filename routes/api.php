@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BookController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,4 +27,8 @@ Route::post('/auth/register', [AuthController::class, 'createUser']);
 Route::post('/auth/login', [AuthController::class, 'loginUser']);
 
 Route::apiResource('categories', CategoryController::class)->middleware('auth:sanctum');
+Route::get('categories/search/{id}', function ($id) {
+    return Book::where('category_id', $id)->get();
+    
+})->middleware('auth:sanctum');
 Route::apiResource('books', BookController::class)->middleware('auth:sanctum');
