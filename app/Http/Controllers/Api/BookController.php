@@ -12,6 +12,7 @@ class BookController extends BaseController
     public function index()
     {
         $books = Book::all();
+        $books->download_link = $this->getDownloadLink($books);
         return $this->sendResponse($books, 'Books retrieved successfully.');
     }
 
@@ -73,5 +74,13 @@ class BookController extends BaseController
         $destinationPath = storage_path('/app/public/books/');
         $file->move($destinationPath, $name);
         return $name;
+    }
+
+    public function getDownloadLink($books)
+    {
+        foreach ($books as $book) {
+            $book->download_link = url('storage/books/' . $book->download_link);
+        }
+        return $books;
     }
 }
