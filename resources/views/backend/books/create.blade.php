@@ -22,7 +22,7 @@
         </div>
     @endif
 
-    <form action="{{ route('books.store') }}" method="post">
+    <form action="{{ route('books.store') }}" method="post" enctype="multipart/form-data">
         <div>
             @csrf
             <div class="form-group">
@@ -31,8 +31,13 @@
             </div>
             <div class="form-group">
                 <label for="category_name">Category Name</label>
-                <input type="text" class="form-control" name="category_name" id="category_name"
-                    placeholder="Enter Category Name">
+                <select class="form-control" name="category_id" id="category_name">
+                    {{-- @dd($categories); --}}
+                    <option value="">Select Category</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                    @endforeach
+                </select>
             </div>
             <div class="form-group">
                 <label for="details">Book Details</label>
