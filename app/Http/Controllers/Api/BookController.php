@@ -50,7 +50,8 @@ class BookController extends BaseController
         ];
         if ($request->hasFile('download_link')) {
             $download_link = $request->file('download_link');
-            $name = time() . '.' . $download_link->getClientOriginalExtension();
+            $name = $download_link->getClientOriginalName() . '-' . time() .
+            '.' . $download_link->getClientOriginalExtension();
             $destinationPath = storage_path('/app/public/books/');
             $download_link->move($destinationPath, $name);
             $book->download_link = $name;
@@ -63,6 +64,11 @@ class BookController extends BaseController
 
     public function destroy(Book $book)
     {
+        $book=Book::find($book->id);
+        $url = storage_path('/app/public/books/' . $book->download_link);
+        if (file_exists($url)) {
+            unlink($url);
+        }
         $book->delete();
 
         return $this->sendResponse($book->toArray(), 'Book deleted successfully.');
@@ -70,7 +76,8 @@ class BookController extends BaseController
 
     public function uploadpdf($file)
     {
-        $name = time() . '.' . $file->getClientOriginalExtension();
+        $name = $file->getClientOriginalName() .'-'. time(). 
+         '.' . $file->getClientOriginalExtension();
         $destinationPath = storage_path('/app/public/books/');
         $file->move($destinationPath, $name);
         return $name;

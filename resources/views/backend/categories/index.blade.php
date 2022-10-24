@@ -59,17 +59,14 @@
                                                     <a class="btn btn-primary"
                                                         href={{ route('categories.show', ['category' => $category->id]) }}>Show</a>
 
-
-                                                    @can('Admin')
-                                                        <button class="btn btn-danger"
-                                                            onclick="deleteBus(<?php echo $category->id; ?>)">Delete</button>
-                                                        {{-- <form style="display:inline" action="{{ route('categories.destroy', ['buse' => $category->id]) }}" method="post">
+                                                    <form action="{{ route('categories.destroy', ['category' => $category->id]) }}"
+                                                        method="POST">
                                 @csrf
                                 @method('delete')
 
                                 <button onclick="return confirm('Are you sure want to delete ?')" class="btn btn-danger" type="submit">Delete</button>
-                            </form> --}}
-                                                    @endcan
+                            </form>
+                                                  
                                                 </td>
                                             </tr>
                                         @endforeach
