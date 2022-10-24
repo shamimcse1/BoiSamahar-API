@@ -7,12 +7,12 @@
 
                     <a class="nav-link" href="{{ route('categories.index') }}">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                        Input category
+                        Add Category
                     </a>
 
                     <a class="nav-link" href="{{ route('books.index') }}">
                         <div class="sb-nav-link-icon"><i class='fas fa-car'></i></div>
-                        Input Book
+                        Add Book
                     </a>
 
         </div>
