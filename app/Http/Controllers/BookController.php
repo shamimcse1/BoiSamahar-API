@@ -4,38 +4,27 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use App\Models\Category;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
 class BookController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
        $books = Book::all();
          return view('backend.books.index', compact('books'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
         $books = Book::all();
-        return view('backend.books.create', compact('books'));
+        $categories = Category::all();
+        return view('backend.books.create', compact('books', 'categories'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
         $request->validate([
@@ -44,32 +33,22 @@ class BookController extends Controller
             'details' => 'required',
             'category_id' => 'required',
         ]);
+        try {
+            Book::create([
+                'name' => $request->name,
+                'details' => $request->details,
+                'download_link' => $this->uploadpdf(request()->file('download_link')),
+                'category_id' => $request->category_id,
+            ]);
 
-        // If include file, upload
-        if($request->file()) {
-            $fileName = time().'_'.$request->download_link->getClientOriginalName();
-            $filePath = $request->file('download_link')->storeAs('books', $fileName, 'public');
-            $path = 'storage/'.$filePath;
+            return redirect()->route('books.index')->withMessage('Successfully Created!');
+        } catch (QueryException $e) {
+            return redirect()->back()->withInput()->withErrors($e->getMessage());
         }
 
-        // Data insert
-        $book = new Book;
-        $book->name = $request->name;
-        $book->download_link = $path;
-        $book->details = $request->details;
-        $book->category_id = $request->category_id;
-        $book->save();
-
-        // Redirect
-        return redirect()->route('books.index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+ 
     public function show($id)
     {
         $book = Book::find($id);
@@ -77,12 +56,7 @@ class BookController extends Controller
         
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+  
     public function edit($id)
     {
         $book = Book::find($id);
@@ -90,53 +64,52 @@ class BookController extends Controller
         return view('backend.books.edit', compact('book', 'categories'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+   
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'name' => 'required|min:3|max:191',
-            'download_link' => 'required',
-            'details' => 'required',
-            'category_id' => 'required',
-        ]);
-
-        // If include file, upload
-        if($request->file()) {
-            $fileName = time().'_'.$request->download_link->getClientOriginalName();
-            $filePath = $request->file('download_link')->storeAs('books', $fileName, 'public');
-            $path = 'storage/'.$filePath;
-        }
-
-        // Data insert
         $book = Book::find($id);
-        $book->name = $request->name;
-        $book->download_link = $path;
-        $book->details = $request->details;
-        $book->category_id = $request->category_id;
-        $book->save();
+        try {
+            $requestData = [
+                'name' => $request->name,
+                'details' => $request->details,
+                'category_id' => $request->category_id,
+            ];
+
+            if ($request->hasFile('download_link')) {
+                $download_link = $request->file('download_link');
+                $name = time() . '.' . $download_link->getClientOriginalExtension();
+                $destinationPath = storage_path('/app/public/books/');
+                $download_link->move($destinationPath, $name);
+                $book->download_link = $name;
+            }
+
+            $book->update($requestData);
+
+            return redirect()->route('books.index')->withMessage('Successfully Updated!');
+        } catch (QueryException $e) {
+            return redirect()->back()->withInput()->withErrors($e->getMessage());
+        }
+    }
+
+
+    public function destroy($id)
+    {
+        $book = Book::find($id);
+        $unlink = storage_path('app/public/books/' . $book->download_link);
+        if (file_exists($unlink)) {
+            unlink($unlink);
+        }
+        $book->delete();
 
         // Redirect
         return redirect()->route('books.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function uploadpdf($file)
     {
-        $book = Book::find($id);
-        $book->delete();
-
-        // Redirect
-        return redirect()->route('books.index');
+        $name = time() . '.' . $file->getClientOriginalExtension();
+        $destinationPath = storage_path('/app/public/books/');
+        $file->move($destinationPath, $name);
+        return $name;
     }
 }
