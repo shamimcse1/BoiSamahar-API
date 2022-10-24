@@ -63,8 +63,12 @@
                                                         href="{{ route('books.edit', $book->id) }}">Edit</a>
                                                         <a class="btn btn-primary"
                                                         href={{ route('books.show', ['book' => $book->id]) }}>Show</a>
-                                                    <a class="btn btn-danger"
-                                                        href="{{ route('books.destroy', $book->id) }}">Delete</a>
+                                                    <form action="{{ route('books.destroy', $book->id) }}" method="POST">
+                                                       @csrf
+                                @method('delete')
+
+                                <button onclick="return confirm('Are you sure want to delete ?')" class="btn btn-danger" type="submit">Delete</button>
+                            </form>
                                                 </td>
                                             </tr>
                                         @endforeach
