@@ -27,7 +27,11 @@ Route::post('/auth/register', [AuthController::class, 'createUser']);
 Route::post('/auth/login', [AuthController::class, 'loginUser']);
 Route::apiResource('categories', CategoryController::class);
 Route::get('categories/search/{id}', function ($id) {
-    return Book::where('category_id', $id)->get();
+    $books = Book::where('category_id', $id)->get();
+    foreach ($books as $book) {
+        $book->download_link = url('storage/books/' . $book->download_link);
+    }
+    return $books; 
     
 });
 Route::apiResource('books', BookController::class);

@@ -12,7 +12,8 @@ class BookController extends Controller
 
     public function index()
     {
-       $books = Book::all();
+        $books = Book::all();
+        $books->download_link = $this->getDownloadLink($books);
          return view('backend.books.index', compact('books'));
     }
 
@@ -77,7 +78,9 @@ class BookController extends Controller
 
             if ($request->hasFile('download_link')) {
                 $download_link = $request->file('download_link');
-                $name = time() . '.' . $download_link->getClientOriginalExtension();
+                $name
+                = $download_link->getClientOriginalName() . '-' . time() .
+                '.' . $download_link->getClientOriginalExtension();
                 $destinationPath = storage_path('/app/public/books/');
                 $download_link->move($destinationPath, $name);
                 $book->download_link = $name;
@@ -107,9 +110,19 @@ class BookController extends Controller
 
     public function uploadpdf($file)
     {
-        $name = time() . '.' . $file->getClientOriginalExtension();
+        $name
+        = $file->getClientOriginalName() . '-' . time() .
+        '.' . $file->getClientOriginalExtension();
         $destinationPath = storage_path('/app/public/books/');
         $file->move($destinationPath, $name);
         return $name;
+    }
+
+    public function getDownloadLink($books)
+    {
+        foreach ($books as $book) {
+            $book->download_link = url('storage/books/' . $book->download_link);
+        }
+        return $books;
     }
 }
