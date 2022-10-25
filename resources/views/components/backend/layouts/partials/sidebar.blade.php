@@ -6,21 +6,17 @@
 
 
                 <a class="nav-link" href="{{ route('categories.index') }}">
-                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                    <div class="sb-nav-link-icon"> <i class="fas fa-list"></i></div>
                     Add Category
                 </a>
 
                 <a class="nav-link" href="{{ route('books.index') }}">
-                    <div class="sb-nav-link-icon"><i class='fas fa-car'></i></div>
+                    <div class="sb-nav-link-icon"><i class='fas fa-book'></i></div>
                     Add Book
                 </a>
 
             </div>
-            <!-- <div class="sb-sidenav-footer">
-                <div class="small">Logged By:</div>
-                {{ auth()->user()->name ?? '' }}
-
-            </div> -->
+           
     </nav>
 
 </div>
