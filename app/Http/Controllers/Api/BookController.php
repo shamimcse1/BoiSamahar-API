@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Api\BaseController as BaseController;
 use App\Models\Book;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class BookController extends BaseController
@@ -26,6 +27,8 @@ class BookController extends BaseController
         ];
 
         $book = Book::create($input);
+        Category::where('id', $request->category_id)->increment('number_of_book');
+
 
         return $this->sendResponse($book->toArray(), 'Book created successfully.');
     }
@@ -58,6 +61,12 @@ class BookController extends BaseController
         }
         $book->update($input);
 
+        // $category_number = Category::find($book->category_id);
+        // $number_of_book = [
+        //     'number_of_book' => $category_number->number_of_book + 1,
+        // ];
+        // $category_number->update($number_of_book);
+
 
         return $this->sendResponse($book->toArray(), 'Book updated successfully.');
     }
@@ -70,6 +79,8 @@ class BookController extends BaseController
             unlink($url);
         }
         $book->delete();
+        // $category_number = Category::find($book->category_id);
+        // $book->number_of_book = $category_number->number_of_book - 1;
 
         return $this->sendResponse($book->toArray(), 'Book deleted successfully.');
     }
@@ -90,4 +101,5 @@ class BookController extends BaseController
         }
         return $books;
     }
+
 }

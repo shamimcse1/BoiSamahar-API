@@ -43,6 +43,7 @@
                                         <tr>
                                             <th>Sl#</th>
                                             <th>Name</th>
+                                            <th>Number of Book</th>
                                             <th>Actions</th>
 
                                         </tr>
@@ -53,6 +54,7 @@
                                             <tr>
                                                 <td>{{ ++$sl }}</td>
                                                 <td>{{ $category->name }}</td>
+                                                <td>{{ $category->books->count() }}</td>
                                                 <td>
                                                     <a class="btn btn-primary"
                                                         href={{ route('categories.edit', ['category' => $category->id]) }}>Edit</a>

@@ -41,6 +41,8 @@ class BookController extends Controller
                 'download_link' => $this->uploadpdf(request()->file('download_link')),
                 'category_id' => $request->category_id,
             ]);
+            Category::where('id', $request->category_id)->increment('number_of_book');
+            
 
             return redirect()->route('books.index')->withMessage('Successfully Created!');
         } catch (QueryException $e) {
