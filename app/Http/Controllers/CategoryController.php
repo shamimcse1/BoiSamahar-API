@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Book;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
@@ -41,10 +42,16 @@ class CategoryController extends Controller
             'name' => 'required|min:3|max:191',
         ]);
 
-
+        $categories = Category::all();
+        $book = Book::all();
         // Data insert
         $category = new Category;
         $category->name = $request->name;
+        if($book == null || $book->count() ==0 || isset($categories->books) == null){
+            $category->number_of_book = 0;
+        } else {
+            $category->number_of_book = $categories->books->count();
+        }
         $category->save();
 
         // Redirect

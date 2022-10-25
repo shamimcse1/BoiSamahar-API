@@ -31,7 +31,16 @@ Route::get('categories/search/{id}', function ($id) {
     foreach ($books as $book) {
         $book->download_link = url('storage/books/' . $book->download_link);
     }
-    return $books; 
+
+        $response = [
+            'success' => true,
+            'data'    => $books,
+            'message' => ' search by categories of Books retrieved successfully.',
+        ];
+
+
+        return response()->json($response, 200);
+
     
 });
 Route::apiResource('books', BookController::class);

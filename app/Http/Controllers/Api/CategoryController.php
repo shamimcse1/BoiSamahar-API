@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Api\BaseController as BaseController;
+use App\Models\Book;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
@@ -17,11 +18,18 @@ class CategoryController extends BaseController
 
     public function store(Request $request)
     {
-        $input = [
-            'name' => $request->name,
-        ];
 
-        $category = Category::create($input);
+        $categories = Category::all();
+        $book = Book::all();
+        // Data insert
+        $category = new Category;
+        $category->name = $request->name;
+        if ($book == null || $book->count() == 0 || isset($categories->books) == null) {
+            $category->number_of_book = 0;
+        } else {
+            $category->number_of_book = $categories->books->count();
+        }
+        $category->save();
 
         return $this->sendResponse($category->toArray(), 'Category created successfully.');
     }
