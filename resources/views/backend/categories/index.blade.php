@@ -54,9 +54,9 @@
                                                 <td>{{ ++$sl }}</td>
                                                 <td>{{ $category->name }}</td>
                                                 <td>
-                                                    <a class="btn btn-primary"
+                                                    <a class="btn btn-primary btn-sm mx-1 my-1"
                                                         href={{ route('categories.edit', ['category' => $category->id]) }}>Edit</a>
-                                                    <a class="btn btn-primary"
+                                                    <a class="btn btn-primary btn-sm mx-1 my-1"
                                                         href={{ route('categories.show', ['category' => $category->id]) }}>Show</a>
 
                                                     <form action="{{ route('categories.destroy', ['category' => $category->id]) }}"
@@ -64,7 +64,7 @@
                                 @csrf
                                 @method('delete')
 
-                                <button onclick="return confirm('Are you sure want to delete ?')" class="btn btn-danger" type="submit">Delete</button>
+                                <button onclick="return confirm('Are you sure want to delete ?')" class="btn btn-danger btn-sm mx-1 my-1" type="submit">Delete</button>
                             </form>
                                                   
                                                 </td>

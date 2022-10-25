@@ -59,15 +59,15 @@
                         </td>
                                                 <td>
                                                    
-                                                    <a class="btn btn-info"
+                                                    <a class="btn btn-info btn-sm mx-1 my-1"
                                                         href="{{ route('books.edit', $book->id) }}">Edit</a>
-                                                        <a class="btn btn-primary"
+                                                        <a class="btn btn-primary btn-sm mx-1 my-1"
                                                         href={{ route('books.show', ['book' => $book->id]) }}>Show</a>
                                                     <form action="{{ route('books.destroy', $book->id) }}" method="POST">
                                                        @csrf
                                 @method('delete')
 
-                                <button onclick="return confirm('Are you sure want to delete ?')" class="btn btn-danger" type="submit">Delete</button>
+                                <button onclick="return confirm('Are you sure want to delete ?')" class="btn btn-danger btn-sm mx-1 my-1" type="submit">Delete</button>
                             </form>
                                                 </td>
                                             </tr>

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Book;
+use App\Models\Category;
 
 class HomeController extends Controller
 {
@@ -24,8 +26,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('backend.home');
+        $books = Book::all();
+        return view('backend.home', compact('books'));
     }
-
-  
 }
